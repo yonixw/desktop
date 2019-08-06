@@ -37,14 +37,14 @@ export const NavigationButtons = observer(() => {
     <StyledContainer>
       <ToolbarButton
         disabled={!store.navigationState.canGoBack}
-        size={24}
+        size={20}
         icon={icons.back}
         style={{ marginLeft: 2 }}
         onClick={onBackClick}
       />
       <ToolbarButton
         disabled={!store.navigationState.canGoForward}
-        size={24}
+        size={20}
         icon={icons.forward}
         onClick={onForwardClick}
       />
