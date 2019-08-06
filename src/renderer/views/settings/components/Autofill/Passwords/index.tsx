@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { getPassword } from 'keytar';
 
 import store from '../../../store';
 import { icons } from '~/renderer/constants';
@@ -25,10 +24,12 @@ const getUserPassword = async (data: IFormFillData) => {
 
   if (password) return password;
 
-  const realPassword = await getPassword('wexond', account);
+  // TODO(xnerhu): node-keytar in web
+  // const realPassword = await getPassword('wexond', account);
 
-  passwords.set(account, realPassword);
-  return realPassword;
+  // passwords.set(account, realPassword);
+  // return realPassword;
+  return '';
 };
 
 const Item = ({ data }: { data: IFormFillData }) => {
