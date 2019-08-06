@@ -31,7 +31,9 @@ export class Store {
   @observable
   public theme: ITheme = lightTheme;
 
-  public constructor() {}
+  public constructor() {
+    // TODO(sentialx): settings loading
+  }
 
   public save() {
     window.postMessage(
