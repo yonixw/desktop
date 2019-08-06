@@ -1,10 +1,9 @@
 import { observable, action } from 'mobx';
 
 import { IFormFillData } from '~/interfaces';
-import { Database } from '~/models/database';
 
 export class AutoFillStore {
-  public db = new Database<IFormFillData>('formfill');
+  // public db = new Database<IFormFillData>('formfill');
 
   @observable
   public credentials: IFormFillData[] = [];
@@ -45,19 +44,22 @@ export class AutoFillStore {
 
   @action
   public async load() {
+    // TODO(xnerhu): database
+    /*
     const items = await this.db.get({});
 
     this.credentials = items.filter(r => r.type === 'password');
     this.addresses = items.filter(r => r.type === 'address');
+    */
   }
 
   public async removeItem(data: IFormFillData) {
-    await this.db.remove({ _id: data._id });
+    /*await this.db.remove({ _id: data._id });
 
     if (data.type === 'password') {
       this.credentials = this.credentials.filter(r => r._id !== data._id);
     } else {
       this.addresses = this.addresses.filter(r => r._id !== data._id);
-    }
+    }*/
   }
 }
