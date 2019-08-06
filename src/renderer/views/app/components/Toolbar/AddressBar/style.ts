@@ -2,22 +2,11 @@ import styled from 'styled-components';
 import { colors } from '~/renderer/constants';
 import { body2 } from '~/renderer/mixins';
 
-export const Center = styled.div`
-  flex: 1;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 72px;
-  margin-right: 72px;
-`;
-
-export const StyledAddressBar = styled.input`
+export const Input = styled.input`
   background-color: rgba(0, 0, 0, 0.03);
   border: none;
-  width: 100%;
+  flex: 1;
   height: 28px;
-  max-width: 1200px;
   border-radius: 4px;
   overflow: hidden;
   outline: none;
@@ -25,6 +14,8 @@ export const StyledAddressBar = styled.input`
   transition: 0.2s background-color;
   ${body2()};
   font-size: 13px;
+  display: flex;
+  align-items: center;
 
   &:focus {
     box-shadow: 0 0 0 2px ${colors.blue['100']};
@@ -39,4 +30,18 @@ export const StyledAddressBar = styled.input`
   &:hover {
     background-color: rgba(0, 0, 0, 0.06);
   }
+`;
+
+export const Actions = styled.div`
+  position: absolute;
+  right: 0px;
+`;
+
+export const StyledAddressBar = styled.div`
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  margin-left: 8px;
+  margin-right: 8px;
 `;
