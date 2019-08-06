@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 import { DEFAULT_SETTINGS } from '~/constants';
 import { ISettings, ITheme } from '~/interfaces';
 import { lightTheme } from '~/renderer/constants';
+import { AutoFillStore } from './autofill';
 
 export type SettingsSection =
   | 'appearance'
@@ -16,8 +17,10 @@ export type SettingsSection =
   | 'system';
 
 export class Store {
+  public autoFill = new AutoFillStore();
+
   @observable
-  public dialogContent: 'privacy' = null;
+  public dialogContent: 'privacy' | 'edit-address' = null;
 
   @observable
   public selectedSection: SettingsSection = 'appearance';

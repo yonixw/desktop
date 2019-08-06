@@ -10,6 +10,7 @@ import { NavigationDrawer } from '../NavigationDrawer';
 import { Sections, Container } from './style';
 import { Style } from '../../style';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { Autofill } from '../Autofill';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
@@ -33,6 +34,7 @@ export default observer(() => {
         <GlobalStyle />
         <NavigationDrawer title="Settings" search>
           <MenuItem section="appearance">Appearance</MenuItem>
+          <MenuItem section="autofill">Autofill</MenuItem>
           <MenuItem section="startup">On startup</MenuItem>
           <MenuItem section="address-bar">Address bar</MenuItem>
           <MenuItem section="privacy">Privacy</MenuItem>
@@ -44,6 +46,7 @@ export default observer(() => {
         </NavigationDrawer>
         <Sections style={{ paddingTop: 48 }}>
           {selectedSection === 'appearance' && <Appearance />}
+          {selectedSection === 'autofill' && <Autofill />}
           {selectedSection === 'address-bar' && <AddressBar />}
           {selectedSection === 'privacy' && <Privacy />}
         </Sections>
