@@ -40,8 +40,10 @@ const SearchEngine = () => {
       <Title>Search engine used in the address bar</Title>
       <Control>
         <Dropdown defaultValue={se.name} onChange={onSearchEngineChange}>
-          {searchEngines.map((item, key) => (
-            <Dropdown.Item key={key}>{item.name}</Dropdown.Item>
+          {Object.values(searchEngines).map((item, key) => (
+            <Dropdown.Item key={key} value={item.name}>
+              {item.name}
+            </Dropdown.Item>
           ))}
         </Dropdown>
       </Control>

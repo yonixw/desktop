@@ -21,21 +21,18 @@ export const ContextMenu = styled.div`
   `}
 `;
 
+export interface ContextMenuItemProps {
+  icon?: string;
+  selected?: boolean;
+  theme?: ITheme;
+  dense?: boolean;
+}
+
 export const ContextMenuItem = styled.div`
   padding: 12px 24px;
   font-weight: 400;
 
-  ${({
-    icon,
-    selected,
-    theme,
-    dense,
-  }: {
-    icon?: string;
-    selected?: boolean;
-    theme?: ITheme;
-    dense?: boolean;
-  }) => css`
+  ${({ icon, selected, theme, dense }: ContextMenuItemProps) => css`
     font-size: ${dense ? 13 : 14}px;
     padding: ${dense ? 8 : 12}px ${dense ? 12 : 24}px;
 

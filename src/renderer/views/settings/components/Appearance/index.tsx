@@ -6,21 +6,22 @@ import { Title, Row, Control, Header, Content } from '../App/style';
 import store from '../../store';
 import { onSwitchChange } from '../../utils';
 
-const onThemeChange = (value: 'Light' | 'Dark') => {
-  store.settings.darkTheme = value === 'Dark';
+const onThemeChange = (value: 'light' | 'dark') => {
+  const dark = value === 'dark';
+  store.settings.darkTheme = dark;
   store.save();
 };
 
 const ThemeVariant = () => {
-  const defaultValue = store.settings.darkTheme ? 'Dark' : 'Light';
+  const defaultValue = store.settings.darkTheme ? 'dark' : 'light';
 
   return (
     <Row>
       <Title>Theme variant</Title>
       <Control>
         <Dropdown defaultValue={defaultValue} onChange={onThemeChange}>
-          <Dropdown.Item>Light</Dropdown.Item>
-          <Dropdown.Item>Dark</Dropdown.Item>
+          <Dropdown.Item value="light">Light</Dropdown.Item>
+          <Dropdown.Item value="dark">Dark</Dropdown.Item>
         </Dropdown>
       </Control>
     </Row>
