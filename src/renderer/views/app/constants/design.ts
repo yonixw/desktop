@@ -5,6 +5,9 @@ export const TOOLBAR_BUTTON_WIDTH = 32;
 // Toolbar
 export const TOOLBAR_HEIGHT = 36;
 
+// Appbar
+export const APPBAR_HEIGHT = TOOLBAR_HEIGHT + TABBAR_HEIGHT + 1;
+
 // Widths
 export const WINDOWS_BUTTON_WIDTH = 45;
 export const MENU_WIDTH = 300;

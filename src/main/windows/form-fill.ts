@@ -1,5 +1,5 @@
 import { AppWindow } from '.';
-import { TABBAR_HEIGHT } from '~/renderer/views/app/constants';
+import { APPBAR_HEIGHT } from '~/renderer/views/app/constants';
 import { PopupWindow } from './popup';
 
 const WIDTH = 208;
@@ -32,7 +32,7 @@ export class FormFillWindow extends PopupWindow {
         cBounds.y +
         this.inputRect.y +
         this.inputRect.height +
-        TABBAR_HEIGHT -
+        APPBAR_HEIGHT -
         MARGIN +
         2,
     } as any);
