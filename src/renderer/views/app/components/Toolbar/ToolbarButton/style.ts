@@ -44,7 +44,7 @@ export const Button = styled.div`
 `;
 
 export const Circle = styled.div`
-  border-radius: 4px;
+  border-radius: 6px;
   width: 28px;
   height: 28px;
   position: absolute;

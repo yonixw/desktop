@@ -11,6 +11,7 @@ interface Props {
   style?: any;
   opacity?: number;
   autoInvert?: boolean;
+  addressBar?: boolean;
 }
 
 const onClick = (extensionId: string, tabId: number) => () => {
@@ -20,7 +21,7 @@ const onClick = (extensionId: string, tabId: number) => () => {
 };
 
 export const BrowserAction = observer(
-  ({ data, size, style, opacity, autoInvert }: Props) => {
+  ({ data, size, style, opacity, autoInvert, addressBar }: Props) => {
     const {
       icon,
       badgeText,
@@ -35,11 +36,27 @@ export const BrowserAction = observer(
         <ToolbarButton
           opacity={opacity}
           autoInvert={autoInvert}
-          size={size}
+          size={addressBar ? 16 : size}
           icon={icon}
+          style={
+            addressBar && {
+              height: 24,
+              width: 24,
+            }
+          }
+          circleStyle={
+            addressBar && {
+              height: 24,
+              width: 24,
+            }
+          }
         />
         {badgeText.trim() !== '' && (
-          <Badge background={badgeBackgroundColor} color={badgeTextColor}>
+          <Badge
+            addressBar
+            background={badgeBackgroundColor}
+            color={badgeTextColor}
+          >
             {badgeText}
           </Badge>
         )}
@@ -52,4 +69,5 @@ export const BrowserAction = observer(
   size: 16,
   autoInvert: false,
   opacity: 1,
+  addressBar: false,
 };

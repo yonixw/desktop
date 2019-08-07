@@ -78,7 +78,7 @@ export const AddressBar = observer(() => {
   }
 
   return (
-    <StyledAddressBar>
+    <StyledAddressBar focus={store.inputFocused}>
       <Input
         placeholder="Search in Google or type an URL"
         onChange={onChange}
@@ -95,9 +95,9 @@ export const AddressBar = observer(() => {
         {!isWindow && (
           <BrowserAction
             size={18}
-            style={{ marginLeft: 0, marginRight: 0 }}
             opacity={0.54}
             autoInvert
+            addressBar
             data={{
               badgeBackgroundColor: colors.blue['500'],
               badgeText: blockedAds > 0 ? blockedAds.toString() : '',

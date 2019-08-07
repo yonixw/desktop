@@ -16,6 +16,7 @@ interface Props {
   children?: any;
   opacity?: number;
   autoInvert?: boolean;
+  circleStyle?: any;
 }
 
 export const ToolbarButton = observer(
@@ -30,6 +31,7 @@ export const ToolbarButton = observer(
     opacity,
     autoInvert,
     style,
+    circleStyle,
   }: Props) => {
     style = { ...style };
 
@@ -52,7 +54,7 @@ export const ToolbarButton = observer(
           opacity={opacity}
           autoInvert={autoInvert}
         />
-        <Circle></Circle>
+        <Circle style={circleStyle}></Circle>
         {children}
       </Button>
     );

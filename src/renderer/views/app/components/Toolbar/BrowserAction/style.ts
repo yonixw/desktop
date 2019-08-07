@@ -7,6 +7,7 @@ export const StyledBrowserAction = styled.div`
 interface BadgeProps {
   background?: string;
   color?: string;
+  addressBar?: boolean;
 }
 
 export const Badge = styled.div`
@@ -19,8 +20,10 @@ export const Badge = styled.div`
   right: 4px;
   z-index: 5;
   font-size: 8px;
-  ${({ background, color }: BadgeProps) => css`
+  ${({ background, color, addressBar }: BadgeProps) => css`
     background-color: ${background};
     color: ${color};
+    right: ${addressBar ? 0 : 4}px;
+    top: ${addressBar ? 0 : 6}px;
   `};
 `;
