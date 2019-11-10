@@ -3,7 +3,8 @@ const { resolve, join } = require('path');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components')
+  .default;
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 /* eslint-enable */
 
@@ -34,21 +35,26 @@ const config = {
         include: INCLUDE,
         use: ['file-loader'],
       },
+      // {
+      //   test: /\.tsx|ts$/,
+      //   use: [
+      //     {
+      //       loader: 'ts-loader',
+      //       options: {
+      //         experimentalWatchApi: true,
+      //         transpileOnly: true,
+      //         getCustomTransformers: () => ({
+      //           before: [styledComponentsTransformer],
+      //         }),
+      //       },
+      //     },
+      //   ],
+
+      //   include: INCLUDE,
+      // },
       {
         test: /\.tsx|ts$/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              experimentalWatchApi: true,
-              transpileOnly: true,
-              getCustomTransformers: () => ({
-                before: [styledComponentsTransformer],
-              }),
-            },
-          },
-        ],
-
+        loader: 'babel-loader',
         include: INCLUDE,
       },
       {
