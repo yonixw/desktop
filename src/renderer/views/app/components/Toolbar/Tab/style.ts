@@ -3,7 +3,11 @@ import styled, { css } from 'styled-components';
 import { transparency, icons } from '~/renderer/constants';
 import { ITheme } from '~/interfaces';
 import { centerIcon, body2 } from '~/renderer/mixins';
-import { TAB_PINNED_WIDTH } from '../../../constants';
+import {
+  TAB_PINNED_WIDTH,
+  TAB_ANIMATION_DURATION,
+  TAB_ANIMATION_EASING,
+} from '../../../constants';
 
 interface CloseProps {
   visible: boolean;
@@ -49,6 +53,8 @@ export const StyledClose = styled.div`
 interface TabProps {
   selected: boolean;
   visible?: boolean;
+  leftAnimation?: boolean;
+  widthAnimation?: boolean;
 }
 
 export const StyledTab = styled.div`
@@ -57,12 +63,18 @@ export const StyledTab = styled.div`
   width: 0;
   left: 0;
   align-items: center;
-  will-change: width;
+  will-change: width, transform;
   -webkit-app-region: no-drag;
 
-  ${({ selected, visible }: TabProps) => css`
+  ${({ selected, visible, leftAnimation, widthAnimation }: TabProps) => css`
     z-index: ${selected ? 2 : 1};
     display: ${visible ? 'flex' : 'none'};
+    transition: ${widthAnimation
+        ? `${TAB_ANIMATION_DURATION}s width ${TAB_ANIMATION_EASING}`
+        : ''}
+      ${leftAnimation
+        ? `,${TAB_ANIMATION_DURATION}s transform ${TAB_ANIMATION_EASING}`
+        : ''};
   `};
 `;
 

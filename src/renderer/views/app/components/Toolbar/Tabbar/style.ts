@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import { ToolbarButton } from '../ToolbarButton';
 import { TOOLBAR_BUTTON_WIDTH } from '~/constants/design';
+import {
+  TAB_ANIMATION_EASING,
+  TAB_ANIMATION_DURATION,
+} from '../../../constants/tabs';
 
 export const StyledTabbar = styled.div`
   height: 100%;
@@ -28,4 +32,5 @@ export const AddTab = styled(ToolbarButton)`
   position: absolute;
   left: 0;
   top: 0;
+  transition: ${TAB_ANIMATION_DURATION}s transform ${TAB_ANIMATION_EASING};
 `;

@@ -71,6 +71,12 @@ export class ITab {
   @observable
   public customColor = false;
 
+  @observable
+  public leftAnimation = false;
+
+  @observable
+  public widthAnimation = true;
+
   public left = 0;
   public lastUrl = '';
   public isClosing = false;
@@ -348,13 +354,15 @@ export class ITab {
 
   @action
   public setLeft(left: number, animation: boolean) {
-    store.tabs.animateProperty('x', this.ref.current, left, animation);
+    // store.tabs.animateProperty('x', this.ref.current, left, animation);
+    this.ref.current.style.transform = `translateX(${left}px)`;
     this.left = left;
   }
 
   @action
   public setWidth(width: number, animation: boolean) {
-    store.tabs.animateProperty('width', this.ref.current, width, animation);
+    // store.tabs.animateProperty('width', this.ref.current, width, animation);
+    this.ref.current.style.width = `${width}px`;
     this.width = width;
   }
 

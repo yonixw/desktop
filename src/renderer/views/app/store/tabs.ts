@@ -14,7 +14,6 @@ import store from '.';
 import { ipcRenderer } from 'electron';
 import { defaultTabOptions } from '~/constants/tabs';
 import { TOOLBAR_HEIGHT } from '~/constants/design';
-import { TweenLite } from 'gsap';
 
 export class TabsStore {
   @observable
@@ -226,6 +225,7 @@ export class TabsStore {
     requestAnimationFrame(() => {
       tab.setLeft(tab.getLeft(), false);
       this.updateTabsBounds(true);
+      tab.leftAnimation = true;
 
       this.scrollbarRef.current.scrollToEnd(TAB_ANIMATION_DURATION * 1000);
     });
@@ -452,7 +452,7 @@ export class TabsStore {
       };
       props[property] = value;
 
-      TweenLite.to(obj, animation ? TAB_ANIMATION_DURATION : 0, props);
+      // TweenLite.to(obj, animation ? TAB_ANIMATION_DURATION : 0, props);
     }
   }
 

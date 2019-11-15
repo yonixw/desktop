@@ -240,6 +240,8 @@ export default observer(({ tab }: { tab: ITab }) => {
       onContextMenu={onContextMenu(tab)}
       onClick={onClick(tab)}
       onMouseLeave={onMouseLeave}
+      leftAnimation={tab.leftAnimation}
+      widthAnimation={tab.widthAnimation}
       visible={tab.tabGroupId === store.tabGroups.currentGroupId}
       ref={tab.ref}
     >
