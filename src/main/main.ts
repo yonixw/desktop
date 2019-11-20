@@ -7,7 +7,7 @@ import { SessionsManager } from './sessions-manager';
 import { checkFiles } from '~/utils/files';
 import { Settings } from './models/settings';
 import { isURL, prefixHttp } from '~/utils';
-import { registerProtocol } from './models/protocol';
+import { registerProtocol } from './services/protocol';
 import { autoUpdater } from 'electron-updater';
 import { Storage } from './models/storage';
 

@@ -3,7 +3,7 @@ import { ExtensibleSession } from 'electron-extensions/main';
 import { getPath, makeId } from '~/utils';
 import { promises } from 'fs';
 import { resolve } from 'path';
-import { registerProtocol } from './models/protocol';
+import { registerProtocol } from './services/protocol';
 import { parse } from 'url';
 import { main } from '.';
 
