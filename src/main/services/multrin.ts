@@ -3,12 +3,12 @@ import * as fileIcon from 'extract-file-icon';
 import { ipcMain } from 'electron';
 import mouseHooks from 'mouse-hooks';
 
-import { ProcessWindow } from '../models';
 import { AppWindow } from '../windows';
 import { windowManager, Window } from 'node-window-manager';
 import { TOOLBAR_HEIGHT } from '~/constants/design';
-import { windowsManager } from '..';
 import { IRectangle, IPoint } from '~/interfaces';
+import { ProcessWindow } from '../models/process-window';
+import { main } from '..';
 
 const containsPoint = (bounds: IRectangle, point: IPoint) => {
   return (
@@ -158,7 +158,7 @@ export class Multrin {
         !this.appWindow.isMinimized() &&
         this.draggedWindow &&
         !this.windows.find(x => x.id === this.draggedWindow.id) &&
-        windowsManager.settings.object.multrin
+        main.settings.object.multrin
       ) {
         const winBounds = this.draggedWindow.getBounds();
         const { lastBounds } = this.draggedWindow;

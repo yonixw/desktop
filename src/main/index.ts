@@ -1,6 +1,6 @@
 import { ipcMain, app } from 'electron';
 import { platform } from 'os';
-import { WindowsManager } from './windows-manager';
+import { Main } from './main';
 
 app.name = 'Wexond';
 
@@ -11,7 +11,7 @@ ipcMain.setMaxListeners(0);
 // app.setAsDefaultProtocolClient('http');
 // app.setAsDefaultProtocolClient('https');
 
-export const windowsManager = new WindowsManager();
+export const main = new Main();
 
 process.on('uncaughtException', error => {
   console.error(error);

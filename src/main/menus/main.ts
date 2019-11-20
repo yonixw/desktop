@@ -1,8 +1,10 @@
 import { Menu, webContents } from 'electron';
 import { defaultTabOptions } from '~/constants/tabs';
-import { WindowsManager } from '../windows-manager';
+import { main } from '..';
 
-export const getMainMenu = (windowsManager: WindowsManager) => {
+// TODO: avoid repeating the same functions
+
+export const getMainMenu = () => {
   return Menu.buildFromTemplate([
     {
       label: 'File',
@@ -11,21 +13,21 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           accelerator: 'CmdOrCtrl+T',
           label: 'New tab',
           click() {
-            windowsManager.currentWindow.viewManager.create(defaultTabOptions);
+            main.currentWindow.viewManager.create(defaultTabOptions);
           },
         },
         {
           accelerator: 'CmdOrCtrl+N',
           label: 'New window',
           click() {
-            windowsManager.createWindow();
+            main.createWindow();
           },
         },
         {
           accelerator: 'CmdOrCtrl+Shift+N',
           label: 'New incognito window',
           click() {
-            windowsManager.createWindow(true);
+            main.createWindow(true);
           },
         },
         {
@@ -35,9 +37,9 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           accelerator: 'CmdOrCtrl+W',
           label: 'Close tab',
           click() {
-            windowsManager.currentWindow.webContents.send(
+            main.currentWindow.webContents.send(
               'remove-tab',
-              windowsManager.currentWindow.viewManager.selectedId,
+              main.currentWindow.viewManager.selectedId,
             );
           },
         },
@@ -45,7 +47,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           accelerator: 'CmdOrCtrl+Shift+W',
           label: 'Close current window',
           click() {
-            windowsManager.currentWindow.close();
+            main.currentWindow.close();
           },
         },
         {
@@ -60,7 +62,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           visible: false,
           accelerator: 'CmdOrCtrl+R',
           click: () => {
-            windowsManager.currentWindow.viewManager.selected.webContents.reload();
+            main.currentWindow.viewManager.selected.webContents.reload();
           },
         },
         {
@@ -68,7 +70,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           visible: false,
           accelerator: 'F5',
           click: () => {
-            windowsManager.currentWindow.viewManager.selected.webContents.reload();
+            main.currentWindow.viewManager.selected.webContents.reload();
           },
         },
         {
@@ -76,7 +78,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Find in page',
           visible: false,
           click() {
-            windowsManager.currentWindow.webContents.send('find');
+            main.currentWindow.webContents.send('find');
           },
         },
         {
@@ -84,9 +86,9 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Close tab',
           visible: false,
           click() {
-            windowsManager.currentWindow.webContents.send(
+            main.currentWindow.webContents.send(
               'remove-tab',
-              windowsManager.currentWindow.viewManager.selectedId,
+              main.currentWindow.viewManager.selectedId,
             );
           },
         },
@@ -95,7 +97,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Revert closed tab',
           visible: false,
           click() {
-            windowsManager.currentWindow.webContents.send('revert-closed-tab');
+            main.currentWindow.webContents.send('revert-closed-tab');
           },
         },
         {
@@ -103,7 +105,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Select next tab',
           visible: false,
           click() {
-            windowsManager.currentWindow.webContents.send('select-next-tab');
+            main.currentWindow.webContents.send('select-next-tab');
           },
         },
         {
@@ -111,7 +113,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Toggle Search',
           visible: false,
           click() {
-            windowsManager.currentWindow.searchDialog.show();
+            main.currentWindow.searchDialog.show();
           },
         },
         {
@@ -119,7 +121,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Toggle menu',
           visible: false,
           click() {
-            windowsManager.currentWindow.menuDialog.show();
+            main.currentWindow.menuDialog.show();
           },
         },
         {
@@ -127,7 +129,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Toggle Search',
           visible: false,
           click() {
-            windowsManager.currentWindow.searchDialog.show();
+            main.currentWindow.searchDialog.show();
           },
         },
         {
@@ -135,7 +137,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Toggle menu',
           visible: false,
           click() {
-            windowsManager.currentWindow.menuDialog.show();
+            main.currentWindow.menuDialog.show();
           },
         },
         {
@@ -143,7 +145,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Go back',
           visible: false,
           click() {
-            const { selected } = windowsManager.currentWindow.viewManager;
+            const { selected } = main.currentWindow.viewManager;
             if (selected) {
               selected.webContents.goBack();
             }
@@ -154,7 +156,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           label: 'Go forward',
           visible: false,
           click() {
-            const { selected } = windowsManager.currentWindow.viewManager;
+            const { selected } = main.currentWindow.viewManager;
             if (selected) {
               selected.webContents.goForward();
             }
@@ -178,7 +180,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           visible: false,
           click() {
             setTimeout(() => {
-              windowsManager.currentWindow.viewManager.selected.webContents.toggleDevTools();
+              main.currentWindow.viewManager.selected.webContents.toggleDevTools();
             });
           },
         },
@@ -188,7 +190,7 @@ export const getMainMenu = (windowsManager: WindowsManager) => {
           visible: false,
           click() {
             setTimeout(() => {
-              windowsManager.currentWindow.viewManager.selected.webContents.toggleDevTools();
+              main.currentWindow.viewManager.selected.webContents.toggleDevTools();
             });
           },
         },

@@ -4,21 +4,21 @@ import { isAbsolute, extname } from 'path';
 import { existsSync } from 'fs';
 import { getMainMenu } from './menus/main';
 import { SessionsManager } from './sessions-manager';
-import { runAutoUpdaterService } from './services';
 import { checkFiles } from '~/utils/files';
 import { Settings } from './models/settings';
 import { isURL, prefixHttp } from '~/utils';
 import { registerProtocol } from './models/protocol';
 import storage from './services/storage';
+import { autoUpdater } from 'electron-updater';
 
-export class WindowsManager {
-  public list: AppWindow[] = [];
+export class Main {
+  public windows: AppWindow[] = [];
 
   public currentWindow: AppWindow;
 
   public sessionsManager: SessionsManager;
 
-  public settings = new Settings(this);
+  public settings = new Settings();
 
   public constructor() {
     const gotTheLock = app.requestSingleInstanceLock();
@@ -82,22 +82,23 @@ export class WindowsManager {
 
     storage.run();
 
-    this.sessionsManager = new SessionsManager(this);
+    this.sessionsManager = new SessionsManager();
 
     this.createWindow();
-    Menu.setApplicationMenu(getMainMenu(this));
-    runAutoUpdaterService(this);
+
+    Menu.setApplicationMenu(getMainMenu());
+    this.runAutoUpdaterService();
 
     app.on('activate', () => {
-      if (this.list.filter(x => x !== null).length === 0) {
+      if (this.windows.filter(x => x !== null).length === 0) {
         this.createWindow();
       }
     });
   }
 
   public createWindow(incognito = false) {
-    const window = new AppWindow(this, incognito);
-    this.list.push(window);
+    const window = new AppWindow(incognito);
+    this.windows.push(window);
 
     if (incognito) {
       this.sessionsManager.extensionsIncognito.addWindow(window);
@@ -110,6 +111,24 @@ export class WindowsManager {
   }
 
   public findWindowByBrowserView(webContentsId: number) {
-    return this.list.find(x => !!x.viewManager.views.get(webContentsId));
+    return this.windows.find(x => !!x.viewManager.views.get(webContentsId));
+  }
+
+  private runAutoUpdaterService() {
+    ipcMain.on('update-install', () => {
+      autoUpdater.quitAndInstall();
+    });
+
+    ipcMain.on('update-check', () => {
+      if (process.env.ENV !== 'dev') {
+        autoUpdater.checkForUpdates();
+      }
+    });
+
+    autoUpdater.on('update-downloaded', ({ version }) => {
+      for (const window of this.windows) {
+        window.webContents.send('update-available', version);
+      }
+    });
   }
 }

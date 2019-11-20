@@ -4,8 +4,6 @@ import { resolve, join } from 'path';
 
 import { ViewManager } from '../view-manager';
 import { getPath } from '~/utils';
-import { runMessagingService } from '../services';
-import { WindowsManager } from '../windows-manager';
 import {
   MenuDialog,
   SearchDialog,
@@ -17,6 +15,8 @@ import {
   PreviewDialog,
 } from '../dialogs';
 import { TabGroupDialog } from '../dialogs/tabgroup';
+import { main } from '..';
+import { runMessagingService } from '../services/messaging';
 
 export class AppWindow extends BrowserWindow {
   public viewManager: ViewManager;
@@ -34,9 +34,7 @@ export class AppWindow extends BrowserWindow {
 
   public incognito: boolean;
 
-  private windowsManager: WindowsManager;
-
-  public constructor(windowsManager: WindowsManager, incognito: boolean) {
+  public constructor(incognito: boolean) {
     super({
       frame: false,
       minWidth: 400,
@@ -55,7 +53,6 @@ export class AppWindow extends BrowserWindow {
     });
 
     this.incognito = incognito;
-    this.windowsManager = windowsManager;
 
     this.viewManager = new ViewManager(this, incognito);
 
@@ -160,15 +157,12 @@ export class AppWindow extends BrowserWindow {
 
       this.viewManager.clear();
 
-      if (
-        incognito &&
-        windowsManager.list.filter(x => x.incognito).length === 1
-      ) {
-        windowsManager.sessionsManager.clearCache('incognito');
-        windowsManager.sessionsManager.unloadIncognitoExtensions();
+      if (incognito && main.windows.filter(x => x.incognito).length === 1) {
+        main.sessionsManager.clearCache('incognito');
+        main.sessionsManager.unloadIncognitoExtensions();
       }
 
-      windowsManager.list = windowsManager.list.filter(x => x.id !== this.id);
+      main.windows = main.windows.filter(x => x.id !== this.id);
     });
 
     // this.webContents.openDevTools({ mode: 'detach' });
@@ -210,7 +204,7 @@ export class AppWindow extends BrowserWindow {
     });
 
     this.on('focus', () => {
-      windowsManager.currentWindow = this;
+      main.currentWindow = this;
     });
   }
 }

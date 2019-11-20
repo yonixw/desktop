@@ -2,9 +2,9 @@ import { existsSync, promises as fs } from 'fs';
 import { resolve } from 'path';
 import fetch from 'node-fetch';
 
-import { windowsManager } from '..';
 import { ElectronBlocker, Request } from '@cliqz/adblocker-electron';
 import { getPath } from '~/utils';
+import { main } from '..';
 
 export let engine: ElectronBlocker;
 
@@ -55,7 +55,7 @@ export const runAdblockService = (ses: any) => {
   ses.id1 = '';
 
   const emitBlockedEvent = (request: Request) => {
-    for (const window of windowsManager.list) {
+    for (const window of main.windows) {
       window.webContents.send(`blocked-ad-${request.tabId}`);
     }
   };

@@ -3,10 +3,10 @@ import { ExtensibleSession } from 'electron-extensions/main';
 import { getPath, makeId } from '~/utils';
 import { promises } from 'fs';
 import { resolve } from 'path';
-import { WindowsManager } from './windows-manager';
 import { registerProtocol } from './models/protocol';
 import storage from './services/storage';
 import { parse } from 'url';
+import { main } from '.';
 
 const extensibleSessionOptions = {
   backgroundPreloadPath: resolve(__dirname, 'extensions-background-preload.js'),
@@ -28,11 +28,7 @@ export class SessionsManager {
 
   public incognitoExtensionsLoaded = false;
 
-  private windowsManager: WindowsManager;
-
-  public constructor(windowsManager: WindowsManager) {
-    this.windowsManager = windowsManager;
-
+  public constructor() {
     this.loadExtensions('normal');
 
     registerProtocol(this.view);
@@ -42,7 +38,7 @@ export class SessionsManager {
 
     this.view.setPermissionRequestHandler(
       async (webContents, permission, callback, details) => {
-        const window = windowsManager.findWindowByBrowserView(webContents.id);
+        const window = main.findWindowByBrowserView(webContents.id);
 
         if (webContents.id !== window.viewManager.selectedId) return;
 
@@ -92,7 +88,7 @@ export class SessionsManager {
       const fileName = item.getFilename();
       const savePath = resolve(app.getPath('downloads'), fileName);
       const id = makeId(32);
-      const window = windowsManager.findWindowByBrowserView(webContents.id);
+      const window = main.findWindowByBrowserView(webContents.id);
 
       item.setSavePath(savePath);
 

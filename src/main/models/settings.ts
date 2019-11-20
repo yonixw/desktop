@@ -7,7 +7,7 @@ import { promises } from 'fs';
 import { getPath, makeId } from '~/utils';
 import { EventEmitter } from 'events';
 import { runAdblockService, stopAdblockService } from '../services/adblock';
-import { WindowsManager } from '../windows-manager';
+import { main } from '..';
 
 export class Settings extends EventEmitter {
   public object = DEFAULT_SETTINGS;
@@ -16,19 +16,15 @@ export class Settings extends EventEmitter {
 
   private loaded = false;
 
-  private windowsManager: WindowsManager;
-
-  public constructor(windowsManager: WindowsManager) {
+  public constructor() {
     super();
-
-    this.windowsManager = windowsManager;
 
     ipcMain.on(
       'save-settings',
       (e, { settings }: { settings: string; incognito: boolean }) => {
         this.object = { ...this.object, ...JSON.parse(settings) };
 
-        for (const window of windowsManager.list) {
+        for (const window of main.windows) {
           if (window.webContents.id !== e.sender.id) {
             window.webContents.send('update-settings', this.object);
             window.searchDialog.webContents.send(
@@ -76,8 +72,8 @@ export class Settings extends EventEmitter {
 
   public update = () => {
     const contexts = [
-      this.windowsManager.sessionsManager.extensions,
-      this.windowsManager.sessionsManager.extensionsIncognito,
+      main.sessionsManager.extensions,
+      main.sessionsManager.extensionsIncognito,
     ];
 
     contexts.forEach(e => {
