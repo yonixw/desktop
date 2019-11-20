@@ -2,9 +2,9 @@ import { BrowserView, app, ipcMain } from 'electron';
 import { parse as parseUrl } from 'url';
 import { getViewMenu } from './menus/view';
 import { AppWindow } from './windows';
-import storage from './services/storage';
 import Vibrant = require('node-vibrant');
 import { IHistoryItem } from '~/interfaces';
+import { main } from '.';
 
 export class View extends BrowserView {
   public title = '';
@@ -175,7 +175,7 @@ export class View extends BrowserView {
           let fav = this.favicon;
 
           if (fav.startsWith('http')) {
-            fav = await storage.addFavicon(fav);
+            fav = await main.storage.addFavicon(fav);
           }
 
           this.window.webContents.send(
@@ -248,7 +248,7 @@ export class View extends BrowserView {
   public async updateCredentials() {
     if (this.isDestroyed()) return;
 
-    const item = await storage.findOne<any>({
+    const item = await main.storage.findOne<any>({
       scope: 'formfill',
       query: {
         url: this.hostname,
@@ -276,7 +276,7 @@ export class View extends BrowserView {
       };
 
       this.lastHistoryId = (
-        await storage.insert<IHistoryItem>({
+        await main.storage.insert<IHistoryItem>({
           scope: 'history',
           item: historyItem,
         })
@@ -284,7 +284,7 @@ export class View extends BrowserView {
 
       historyItem._id = this.lastHistoryId;
 
-      storage.history.push(historyItem);
+      main.storage.history.push(historyItem);
     } else if (!inPage) {
       this.lastHistoryId = '';
     }
@@ -309,7 +309,7 @@ export class View extends BrowserView {
       if (this.lastHistoryId) {
         const { title, url, favicon } = this;
 
-        storage.update({
+        main.storage.update({
           scope: 'history',
           query: {
             _id: this.lastHistoryId,
@@ -322,7 +322,9 @@ export class View extends BrowserView {
           multi: false,
         });
 
-        const item = storage.history.find(x => x._id === this.lastHistoryId);
+        const item = main.storage.history.find(
+          x => x._id === this.lastHistoryId,
+        );
 
         if (item) {
           item.title = title;

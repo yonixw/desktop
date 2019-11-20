@@ -4,7 +4,6 @@ import { getPath, makeId } from '~/utils';
 import { promises } from 'fs';
 import { resolve } from 'path';
 import { registerProtocol } from './models/protocol';
-import storage from './services/storage';
 import { parse } from 'url';
 import { main } from '.';
 
@@ -47,7 +46,7 @@ export class SessionsManager {
         } else {
           try {
             const { hostname } = parse(details.requestingUrl);
-            const perm: any = await storage.findOne({
+            const perm: any = await main.storage.findOne({
               scope: 'permissions',
               query: {
                 url: hostname,
@@ -65,7 +64,7 @@ export class SessionsManager {
 
               callback(response);
 
-              await storage.insert({
+              await main.storage.insert({
                 scope: 'permissions',
                 item: {
                   url: hostname,

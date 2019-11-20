@@ -1,6 +1,5 @@
 import { parse } from 'url';
 
-import storage from '../services/storage';
 import { IFormFillData } from '~/interfaces';
 import { getFormFillValue, getFormFillSubValue } from '~/utils/form-fill';
 import { main } from '..';
@@ -16,7 +15,7 @@ export const getFormFillMenuItems = async (name: string, value: string) => {
   const url = main.currentWindow.viewManager.selected.webContents.getURL();
   const { hostname } = parse(url);
 
-  const items = await storage.find<IFormFillData>({
+  const items = await main.storage.find<IFormFillData>({
     scope: 'formfill',
     query: {
       type: dataType,

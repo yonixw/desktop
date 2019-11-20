@@ -5,7 +5,7 @@ import { setPassword, deletePassword, getPassword } from 'keytar';
 import { IFormFillData } from '~/interfaces';
 import { AppWindow } from '../windows';
 import { getFormFillMenuItems } from '../utils';
-import storage from './storage';
+import { main } from '..';
 
 export const runMessagingService = (appWindow: AppWindow) => {
   const { id } = appWindow;
@@ -58,7 +58,7 @@ export const runMessagingService = (appWindow: AppWindow) => {
     appWindow.previewDialog.show();
   });
 
-  ipcMain.on(`hide-tab-preview-${id}`, (e, tab) => {
+  ipcMain.on(`hide-tab-preview-${id}`, () => {
     appWindow.previewDialog.hide(appWindow.previewDialog.visible);
   });
 
@@ -104,7 +104,7 @@ export const runMessagingService = (appWindow: AppWindow) => {
 
       const item =
         _id &&
-        (await storage.findOne<IFormFillData>({
+        (await main.storage.findOne<IFormFillData>({
           scope: 'formfill',
           query: { _id },
         }));
@@ -140,7 +140,7 @@ export const runMessagingService = (appWindow: AppWindow) => {
     const hostname = view.hostname;
 
     if (!update) {
-      const item = await storage.insert<IFormFillData>({
+      const item = await main.storage.insert<IFormFillData>({
         scope: 'formfill',
         item: {
           type: 'password',
@@ -158,7 +158,7 @@ export const runMessagingService = (appWindow: AppWindow) => {
         item,
       );
     } else {
-      await storage.update({
+      await main.storage.update({
         scope: 'formfill',
         query: {
           type: 'password',
@@ -186,7 +186,7 @@ export const runMessagingService = (appWindow: AppWindow) => {
     const { _id, fields } = data;
     const view = appWindow.viewManager.selected;
 
-    await storage.remove({
+    await main.storage.remove({
       scope: 'formfill',
       query: {
         _id,

@@ -8,8 +8,8 @@ import { checkFiles } from '~/utils/files';
 import { Settings } from './models/settings';
 import { isURL, prefixHttp } from '~/utils';
 import { registerProtocol } from './models/protocol';
-import storage from './services/storage';
 import { autoUpdater } from 'electron-updater';
+import { Storage } from './models/storage';
 
 export class Main {
   public windows: AppWindow[] = [];
@@ -19,6 +19,8 @@ export class Main {
   public sessionsManager: SessionsManager;
 
   public settings = new Settings();
+
+  public storage = new Storage();
 
   public constructor() {
     const gotTheLock = app.requestSingleInstanceLock();
@@ -80,7 +82,7 @@ export class Main {
 
     registerProtocol(session.defaultSession);
 
-    storage.run();
+    this.storage.run();
 
     this.sessionsManager = new SessionsManager();
 

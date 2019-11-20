@@ -23,7 +23,7 @@ const convertIcoToPng = async (icoData: Buffer): Promise<ArrayBuffer> => {
   return (await icojs.parse(icoData, 'image/png'))[0].buffer;
 };
 
-export class StorageService {
+export class Storage {
   public databases: Databases = {
     favicons: null,
     bookmarks: null,
@@ -246,5 +246,3 @@ export class StorageService {
     });
   };
 }
-
-export default new StorageService();
