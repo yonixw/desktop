@@ -6,7 +6,6 @@ import { ItemBase } from '../TopSites/style';
 import { ITheme } from '~/interfaces';
 
 export const Item = styled(ItemBase)`
-  box-shadow: ${shadows(4)};
   transition: 0.2s box-shadow, 0.2s background-color;
   cursor: pointer;
   display: flex;
@@ -14,18 +13,20 @@ export const Item = styled(ItemBase)`
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
 
   ${({ theme }: { theme?: ITheme }) => css`
     background-color: ${theme['pages.lightForeground']
-      ? 'rgba(0, 0, 0, 0.4)'
+      ? 'rgba(0, 0, 0, 0.3)'
       : 'rgba(255, 255, 255, 0.4)'};
 
     &:hover {
       box-shadow: ${shadows(8)};
       background-color: ${theme['pages.lightForeground']
-        ? 'rgb(25, 25, 25)'
-        : '#f0f0f0'};
+        ? 'rgba(0, 0, 0, 0.4)'
+        : 'rgba(255, 255, 255, 0.5)'};
     }
   `};
 `;
@@ -37,6 +38,20 @@ export const AddItem = styled(Item)`
 
 export const Icon = styled.div`
   ${centerIcon()};
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    opacity: 0.3;
+    background-color: white;
+    z-index: -1;
+    border-radius: 50%;
+  }
 
   ${({
     add,
@@ -68,4 +83,5 @@ export const Title = styled.div`
   max-width: calc(100% - 16px);
   margin-top: 20px;
   margin-bottom: -8px;
+  opacity: 0.87;
 `;
