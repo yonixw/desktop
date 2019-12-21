@@ -10,9 +10,10 @@ import {
   TAB_MAX_WIDTH,
   TAB_PINNED_WIDTH,
 } from '../constants';
-import { getColorBrightness, callViewMethod } from '~/utils';
+import { getColorBrightness } from '~/utils';
 import { NEWTAB_URL } from '~/constants/tabs';
 import { closeWindow } from '../utils/windows';
+import { callViewMethod } from '~/utils/view';
 
 const isColorAcceptable = (color: string) => {
   if (store.theme['tab.allowLightBackground']) {
@@ -390,6 +391,6 @@ export class ITab {
   }
 
   public callViewMethod = (scope: string, ...args: any[]): Promise<any> => {
-    return callViewMethod(store.windowId, this.id, scope, ...args);
+    return callViewMethod(this.id, scope, ...args);
   };
 }

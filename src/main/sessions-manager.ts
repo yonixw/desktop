@@ -1,4 +1,4 @@
-import { session, app, ipcMain } from 'electron';
+import { session, ipcMain } from 'electron';
 import { ExtensibleSession } from 'electron-extensions/main';
 import { getPath, makeId } from '~/utils';
 import { promises, existsSync } from 'fs';
@@ -44,6 +44,13 @@ export class SessionsManager {
     registerProtocol(this.viewIncognito);
 
     this.clearCache('incognito');
+
+    this.view.webRequest.onBeforeRequest(
+      { urls: ['<all_urls>'] },
+      (details, callback) => {
+        callback({ cancel: false });
+      },
+    );
 
     this.view.setPermissionRequestHandler(
       async (webContents, permission, callback, details) => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { createGlobalStyle } from 'styled-components';
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import { Style } from '../../style';
 import {
@@ -14,18 +14,13 @@ import {
   Occurrences,
 } from './style';
 import store from '../../store';
-import { callViewMethod } from '~/utils';
+import { callViewMethod } from '~/utils/view';
 import { icons } from '~/renderer/constants/icons';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
 const close = () => {
-  callViewMethod(
-    store.windowId,
-    store.tabId,
-    'webContents.stopFindInPage',
-    'clearSelection',
-  );
+  callViewMethod(store.tabId, 'stopFindInPage', 'clearSelection');
   store.occurrences = '0/0';
   store.hide();
   store.visible = false;
@@ -39,20 +34,10 @@ const onInput = async () => {
   store.text = value;
 
   if (value === '') {
-    callViewMethod(
-      store.windowId,
-      store.tabId,
-      'webContents.stopFindInPage',
-      'clearSelection',
-    );
+    callViewMethod(store.tabId, 'stopFindInPage', 'clearSelection');
     store.occurrences = '0/0';
   } else {
-    await callViewMethod(
-      store.windowId,
-      store.tabId,
-      'webContents.findInPage',
-      value,
-    );
+    await callViewMethod(store.tabId, 'findInPage', value);
   }
 
   store.updateTabInfo();
@@ -62,16 +47,10 @@ const move = (forward: boolean) => async () => {
   const { value } = store.findInputRef.current;
   if (value === '') return;
 
-  await callViewMethod(
-    store.windowId,
-    store.tabId,
-    'webContents.findInPage',
-    value,
-    {
-      forward,
-      findNext: true,
-    },
-  );
+  await callViewMethod(store.tabId, 'findInPage', value, {
+    forward,
+    findNext: true,
+  });
 
   store.updateTabInfo();
 };
