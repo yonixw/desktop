@@ -45,13 +45,6 @@ export class SessionsManager {
 
     this.clearCache('incognito');
 
-    this.view.webRequest.onBeforeRequest(
-      { urls: ['<all_urls>'] },
-      (details, callback) => {
-        callback({ cancel: false });
-      },
-    );
-
     this.view.setPermissionRequestHandler(
       async (webContents, permission, callback, details) => {
         const window = windowsManager.findWindowByBrowserView(webContents.id);
@@ -100,6 +93,18 @@ export class SessionsManager {
       },
     );
 
+    const getDownloadItem = (
+      item: Electron.DownloadItem,
+      id: string,
+    ): IDownloadItem => ({
+      fileName: basename(item.savePath),
+      receivedBytes: 0,
+      totalBytes: item.getTotalBytes(),
+      savePath: item.savePath,
+      id,
+    });
+
+    // TODO(sentialx): clean up the download listeners
     this.view.on('will-download', (event, item, webContents) => {
       const fileName = item.getFilename();
       const id = makeId(32);
@@ -119,13 +124,7 @@ export class SessionsManager {
         item.savePath = savePath;
       }
 
-      const downloadItem: IDownloadItem = {
-        fileName: basename(item.savePath),
-        receivedBytes: 0,
-        totalBytes: item.getTotalBytes(),
-        savePath: item.savePath,
-        id,
-      };
+      const downloadItem = getDownloadItem(item, id);
 
       window.downloadsDialog.webContents.send('download-started', downloadItem);
       window.webContents.send('download-started', downloadItem);
@@ -136,16 +135,13 @@ export class SessionsManager {
         } else if (state === 'progressing') {
           if (item.isPaused()) {
             console.log('Download is paused');
-          } else {
-            const data = {
-              id,
-              receivedBytes: item.getReceivedBytes(),
-            };
-
-            window.downloadsDialog.webContents.send('download-progress', data);
-            window.webContents.send('download-progress', data);
           }
         }
+
+        const data = getDownloadItem(item, id);
+
+        window.downloadsDialog.webContents.send('download-progress', data);
+        window.webContents.send('download-progress', data);
       });
       item.once('done', async (event, state) => {
         if (state === 'completed') {
@@ -196,6 +192,45 @@ export class SessionsManager {
 
             window.webContents.send('load-browserAction', extension);
           }
+        } else {
+          console.log(`Download failed: ${state}`);
+        }
+      });
+    });
+
+    session.defaultSession.on('will-download', (event, item, webContents) => {
+      const id = makeId(32);
+      const window = windowsManager.list.find(
+        x => x && x.webContents.id === webContents.id,
+      );
+
+      const downloadItem = getDownloadItem(item, id);
+
+      window.downloadsDialog.webContents.send('download-started', downloadItem);
+      window.webContents.send('download-started', downloadItem);
+
+      item.on('updated', (event, state) => {
+        if (state === 'interrupted') {
+          console.log('Download is interrupted but can be resumed');
+        } else if (state === 'progressing') {
+          if (item.isPaused()) {
+            console.log('Download is paused');
+          }
+        }
+
+        const data = getDownloadItem(item, id);
+
+        window.downloadsDialog.webContents.send('download-progress', data);
+        window.webContents.send('download-progress', data);
+      });
+      item.once('done', async (event, state) => {
+        if (state === 'completed') {
+          window.downloadsDialog.webContents.send('download-completed', id);
+          window.webContents.send(
+            'download-completed',
+            id,
+            !window.downloadsDialog.visible,
+          );
         } else {
           console.log(`Download failed: ${state}`);
         }
