@@ -1,4 +1,4 @@
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { observable, computed } from 'mobx';
 import { getTheme } from '~/utils/themes';
 import { ISettings } from '~/interfaces';
@@ -17,15 +17,17 @@ export class Store {
   public visible = false;
 
   @observable
-  public id = remote.getCurrentWebContents().id;
+  public id: number;
 
   @observable
-  public windowId = remote.getCurrentWindow().id;
+  public windowId: number;
 
   @observable
   public alwaysOnTop = false;
 
   public constructor() {
+    this.init();
+
     ipcRenderer.on('visible', (e, flag) => {
       this.visible = flag;
     });
@@ -43,6 +45,11 @@ export class Store {
     ipcRenderer.on('update-settings', (e, settings: ISettings) => {
       this.settings = { ...this.settings, ...settings };
     });
+  }
+
+  public async init() {
+    this.id = await ipcRenderer.invoke('get-web-contents-id');
+    this.windowId = await ipcRenderer.invoke(`get-window-id-${this.id}`);
   }
 
   public hide() {

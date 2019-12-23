@@ -1,5 +1,9 @@
 /* eslint-disable */
-const { getConfig, applyEntries, getBaseConfig } = require('./webpack.config.base');
+const {
+  getConfig,
+  applyEntries,
+  getBaseConfig,
+} = require('./webpack.config.base');
 const { join } = require('path');
 /* eslint-enable */
 
@@ -19,6 +23,22 @@ const webConfig = getConfig(getBaseConfig('web'), {
   externals: { electron: 'require("electron")' },
 });
 
-applyEntries('web', webConfig, ['settings', 'history', 'newtab', 'bookmarks']);
+applyEntries('web', webConfig, [
+  'settings',
+  'history',
+  'newtab',
+  'bookmarks',
+  'permissions',
+  'auth',
+  'form-fill',
+  'credentials',
+  'find',
+  'menu',
+  'search',
+  'preview',
+  'tabgroup',
+  'downloads',
+  'add-bookmark',
+]);
 
 module.exports = webConfig;

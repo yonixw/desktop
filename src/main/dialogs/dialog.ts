@@ -39,9 +39,12 @@ export class Dialog extends BrowserView {
   ) {
     super({
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
+        preload: `${app.getAppPath()}/build/dialog-preload.bundle.js`,
+        nodeIntegration: false,
+        contextIsolation: true,
         affinity: 'dialog',
+        sandbox: true,
+        enableRemoteModule: false,
       },
     });
 
@@ -54,8 +57,12 @@ export class Dialog extends BrowserView {
       this.hide();
     });
 
+    ipcMain.handle(`get-window-id-${this.webContents.id}`, () => {
+      return this.appWindow.id;
+    });
+
     if (process.env.NODE_ENV === 'development') {
-      this.webContents.loadURL(`http://localhost:4444/${name}.html`);
+      this.webContents.loadURL(`http://localhost:4445/${name}.html`);
       if (devtools) {
         this.webContents.openDevTools({ mode: 'detach' });
       }

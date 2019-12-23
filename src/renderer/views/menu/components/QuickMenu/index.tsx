@@ -13,7 +13,7 @@ import {
 } from './style';
 import { icons } from '~/renderer/constants';
 import store from '../../store';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { WEBUI_BASE_URL, WEBUI_URL_SUFFIX } from '~/constants/files';
 import { Switch } from '~/renderer/components/Switch';
 
@@ -43,7 +43,8 @@ const onShieldClick = () => {
 
 const onAlwaysClick = () => {
   store.alwaysOnTop = !store.alwaysOnTop;
-  remote.getCurrentWindow().setAlwaysOnTop(store.alwaysOnTop);
+  // TODO: move to ipcRenderer
+  // remote.getCurrentWindow().setAlwaysOnTop(store.alwaysOnTop);
 };
 
 const onNewWindowClick = () => {

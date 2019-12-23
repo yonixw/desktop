@@ -19,7 +19,7 @@ protocol.registerSchemesAsPrivileged([
 export const registerProtocol = (session: Electron.Session) => {
   session.protocol.registerFileProtocol(
     'wexond-error',
-    (request, callback: any) => {
+    (request, callback) => {
       const parsed = parse(request.url);
 
       if (parsed.hostname === 'network-error') {
@@ -36,7 +36,7 @@ export const registerProtocol = (session: Electron.Session) => {
   if (process.env.NODE_ENV !== 'development') {
     session.protocol.registerFileProtocol(
       'wexond',
-      (request, callback: any) => {
+      (request, callback) => {
         const parsed = parse(request.url);
 
         if (parsed.path === '/') {

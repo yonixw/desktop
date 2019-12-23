@@ -29,6 +29,10 @@ ipcMain.on('get-webcontents-id', e => {
   e.returnValue = e.sender.id;
 });
 
+ipcMain.handle('get-web-contents-id', e => {
+  return e.sender.id;
+});
+
 ipcMain.handle(
   `web-contents-call`,
   async (e, { webContentsId, method, args }) => {
