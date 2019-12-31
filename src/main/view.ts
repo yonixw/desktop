@@ -34,10 +34,6 @@ export class View extends BrowserView {
         enableRemoteModule: false,
         partition: incognito ? 'view_incognito' : 'persist:view',
         plugins: true,
-        additionalArguments: [
-          `--window-id=${window.id}`,
-          `--blacklist=["${WEBUI_BASE_URL}", "wexond-error://"]`,
-        ],
         nativeWindowOpen: true,
         webSecurity: true,
         javascript: true,
@@ -65,7 +61,7 @@ export class View extends BrowserView {
     });
 
     this.webContents.addListener('found-in-page', (e, result) => {
-      this.window.findDialog.webContents.send('found-in-page', result);
+      this.window.dialogs.findDialog.webContents.send('found-in-page', result);
     });
 
     this.webContents.addListener('page-title-updated', (e, title) => {

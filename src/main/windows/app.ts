@@ -18,23 +18,36 @@ import {
   TabGroupDialog,
   DownloadsDialog,
   AddBookmarkDialog,
+  Dialog,
+  ExtensionPopup,
 } from '../dialogs';
-import { ISettings } from '~/interfaces';
+
+interface IDialogs {
+  searchDialog?: SearchDialog;
+  previewDialog?: PreviewDialog;
+
+  tabGroupDialog?: TabGroupDialog;
+  menuDialog?: MenuDialog;
+  findDialog?: FindDialog;
+  downloadsDialog?: DownloadsDialog;
+  addBookmarkDialog?: AddBookmarkDialog;
+
+  permissionsDialog?: PermissionsDialog;
+  authDialog?: AuthDialog;
+  formFillDialog?: FormFillDialog;
+  credentialsDialog?: CredentialsDialog;
+  extensionPopup?: ExtensionPopup;
+
+  [key: string]: Dialog;
+}
 
 export class AppWindow extends BrowserWindow {
   public viewManager: ViewManager;
 
-  public menuDialog = new MenuDialog(this);
-  public searchDialog = new SearchDialog(this);
-  public tabGroupDialog = new TabGroupDialog(this);
-  public findDialog = new FindDialog(this);
-  public permissionsDialog = new PermissionsDialog(this);
-  public authDialog = new AuthDialog(this);
-  public formFillDialog = new FormFillDialog(this);
-  public credentialsDialog = new CredentialsDialog(this);
-  public previewDialog = new PreviewDialog(this);
-  public downloadsDialog = new DownloadsDialog(this);
-  public addBookmarkDialog = new AddBookmarkDialog(this);
+  public dialogs: IDialogs = {
+    searchDialog: new SearchDialog(this),
+    previewDialog: new PreviewDialog(this),
+  };
 
   public incognito: boolean;
 
@@ -54,12 +67,28 @@ export class AppWindow extends BrowserWindow {
         nodeIntegration: true,
         contextIsolation: false,
         javascript: true,
+        affinity: 'browser',
       },
       icon: resolve(app.getAppPath(), 'static/app-icons/icon.png'),
+      show: false,
     });
 
     this.incognito = incognito;
     this.windowsManager = windowsManager;
+
+    this.webContents.once('dom-ready', () => {
+      this.dialogs.tabGroupDialog = new TabGroupDialog(this);
+      this.dialogs.menuDialog = new MenuDialog(this);
+      this.dialogs.findDialog = new FindDialog(this);
+      this.dialogs.downloadsDialog = new DownloadsDialog(this);
+      this.dialogs.addBookmarkDialog = new AddBookmarkDialog(this);
+
+      this.dialogs.permissionsDialog = new PermissionsDialog(this);
+      this.dialogs.authDialog = new AuthDialog(this);
+      this.dialogs.formFillDialog = new FormFillDialog(this);
+      this.dialogs.credentialsDialog = new CredentialsDialog(this);
+      this.dialogs.extensionPopup = new ExtensionPopup(this);
+    });
 
     this.viewManager = new ViewManager(this, incognito);
 
@@ -94,22 +123,19 @@ export class AppWindow extends BrowserWindow {
       }
     })();
 
+    this.show();
+
     // Update window bounds on resize and on move when window is not maximized.
     this.on('resize', () => {
       if (!this.isMaximized()) {
         windowState.bounds = this.getBounds();
       }
 
-      this.formFillDialog.rearrange();
-      this.credentialsDialog.rearrange();
-      this.authDialog.rearrange();
-      this.findDialog.rearrange();
-      this.menuDialog.hide();
-      this.permissionsDialog.rearrange();
-      this.searchDialog.rearrange();
-      this.tabGroupDialog.rearrange();
-      this.downloadsDialog.rearrange();
-      this.addBookmarkDialog.rearrange();
+      Object.values(this.dialogs).forEach(dialog => {
+        if (dialog.visible) {
+          dialog.rearrange();
+        }
+      });
     });
 
     this.on('move', () => {
@@ -159,30 +185,10 @@ export class AppWindow extends BrowserWindow {
 
       this.setBrowserView(null);
 
-      // TODO: make a cleaner way to destroy dialogs
-      this.menuDialog.destroy();
-      this.searchDialog.destroy();
-      this.authDialog.destroy();
-      this.findDialog.destroy();
-      this.formFillDialog.destroy();
-      this.credentialsDialog.destroy();
-      this.permissionsDialog.destroy();
-      this.previewDialog.destroy();
-      this.tabGroupDialog.destroy();
-      this.downloadsDialog.destroy();
-      this.addBookmarkDialog.destroy();
-
-      this.menuDialog = null;
-      this.searchDialog = null;
-      this.authDialog = null;
-      this.findDialog = null;
-      this.formFillDialog = null;
-      this.credentialsDialog = null;
-      this.permissionsDialog = null;
-      this.previewDialog = null;
-      this.tabGroupDialog = null;
-      this.downloadsDialog = null;
-      this.addBookmarkDialog = null;
+      Object.keys(this.dialogs).forEach(key => {
+        this.dialogs[key] = null;
+        this.dialogs[key].destroy();
+      });
 
       this.viewManager.clear();
 

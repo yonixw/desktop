@@ -3,6 +3,7 @@ import { TOOLBAR_HEIGHT } from '~/constants/design';
 import { View } from './view';
 import { AppWindow } from './windows';
 import { WEBUI_BASE_URL } from '~/constants/files';
+import { windowsManager } from '.';
 
 export class ViewManager {
   public views = new Map<number, View>();
@@ -86,7 +87,7 @@ export class ViewManager {
 
     if (sendMessage) {
       this.window.webContents.send(
-        'api-tabs-create',
+        'create-tab',
         { ...details },
         isNext,
         view.webContents.id,
@@ -117,9 +118,15 @@ export class ViewManager {
     this.window.removeBrowserView(selected);
     this.window.addBrowserView(view);
 
-    this.window.searchDialog.hideVisually();
-    this.window.previewDialog.hideVisually();
-    this.window.tabGroupDialog.hideVisually();
+    this.window.dialogs.searchDialog.hideVisually();
+    this.window.dialogs.previewDialog.hideVisually();
+    this.window.dialogs.tabGroupDialog.hideVisually();
+
+    if (this.incognito) {
+      windowsManager.sessionsManager.extensionsIncognito.activeTab = id;
+    } else {
+      windowsManager.sessionsManager.extensions.activeTab = id;
+    }
 
     // Also fixes switching tabs with Ctrl + Tab
     view.webContents.focus();
