@@ -1,6 +1,6 @@
 name: Build
 
-on: [commit_comment]
+on: [push]
 
 jobs:
   release:
